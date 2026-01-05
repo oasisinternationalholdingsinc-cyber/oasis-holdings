@@ -1,4 +1,4 @@
-// src/app/digital-parliament/page.tsx
+import InstitutionalFrame from '@/components/InstitutionalFrame';
 import Link from "next/link";
 
 const GATEWAY_URL = "https://portal.oasisintlholdings.com";
