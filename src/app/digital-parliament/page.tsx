@@ -1,137 +1,94 @@
 import InstitutionalFrame from '@/components/InstitutionalFrame';
-import Link from 'next/link';
 
 function Emblem() {
-  // Subtle, seal-like emblem. Not “logo”, not “crypto”. Just institutional signal.
+  // Gold “seal” emblem — subtle, absolute behind title
   return (
     <svg
-      aria-hidden
+      aria-hidden='true'
       viewBox='0 0 600 600'
-      className='pointer-events-none absolute left-1/2 top-2 -z-10 h-[520px] w-[520px] -translate-x-1/2 opacity-[0.22] blur-[0.3px]'
+      className='pointer-events-none absolute -right-14 -top-20 h-[380px] w-[380px] opacity-[0.14] blur-[0.2px]'
     >
       <defs>
-        <radialGradient id='g' cx='50%' cy='35%' r='70%'>
-          <stop offset='0%' stopColor='rgba(255,214,128,.20)' />
-          <stop offset='55%' stopColor='rgba(255,214,128,.08)' />
+        <radialGradient id='g' cx='50%' cy='50%' r='60%'>
+          <stop offset='0%' stopColor='rgba(255,214,128,.55)' />
+          <stop offset='60%' stopColor='rgba(255,214,128,.22)' />
           <stop offset='100%' stopColor='rgba(255,214,128,0)' />
         </radialGradient>
+        <linearGradient id='s' x1='0' x2='1'>
+          <stop offset='0%' stopColor='rgba(255,214,128,.65)' />
+          <stop offset='100%' stopColor='rgba(255,214,128,.12)' />
+        </linearGradient>
       </defs>
 
-      <circle cx='300' cy='300' r='210' fill='url(#g)' />
-      <circle
-        cx='300'
-        cy='300'
-        r='208'
-        fill='none'
-        stroke='rgba(255,214,128,.25)'
-        strokeWidth='1.2'
-      />
-      <circle
-        cx='300'
-        cy='300'
-        r='178'
-        fill='none'
-        stroke='rgba(255,214,128,.18)'
-        strokeWidth='1'
-        strokeDasharray='2 6'
-      />
-      <circle
-        cx='300'
-        cy='300'
-        r='128'
-        fill='none'
-        stroke='rgba(255,214,128,.12)'
-        strokeWidth='1'
-      />
+      {/* glow field */}
+      <circle cx='300' cy='300' r='250' fill='url(#g)' />
 
-      {/* subtle cardinal ticks */}
-      {[
-        [300, 70, 300, 98],
-        [300, 502, 300, 530],
-        [70, 300, 98, 300],
-        [502, 300, 530, 300],
-      ].map((d, i) => (
-        <line
-          key={i}
-          x1={d[0]}
-          y1={d[1]}
-          x2={d[2]}
-          y2={d[3]}
-          stroke='rgba(255,214,128,.25)'
-          strokeWidth='1'
-        />
-      ))}
+      {/* seal rings */}
+      <circle cx='300' cy='300' r='210' fill='none' stroke='url(#s)' strokeWidth='2' />
+      <circle cx='300' cy='300' r='170' fill='none' stroke='rgba(255,214,128,.22)' strokeWidth='2' />
+      <circle cx='300' cy='300' r='130' fill='none' stroke='rgba(255,214,128,.14)' strokeWidth='2' />
 
-      {/* inner monogram geometry */}
+      {/* ticks */}
+      {Array.from({ length: 48 }).map((_, i) => {
+        const a = (i / 48) * Math.PI * 2;
+        const x1 = 300 + Math.cos(a) * 180;
+        const y1 = 300 + Math.sin(a) * 180;
+        const x2 = 300 + Math.cos(a) * 198;
+        const y2 = 300 + Math.sin(a) * 198;
+        const major = i % 6 === 0;
+        return (
+          <line
+            key={i}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            stroke={major ? 'rgba(255,214,128,.28)' : 'rgba(255,214,128,.14)'}
+            strokeWidth={major ? 2 : 1}
+            strokeLinecap='round'
+          />
+        );
+      })}
+
+      {/* inner glyph */}
       <path
-        d='M210 335c18-78 64-125 90-125s72 47 90 125'
-        fill='none'
-        stroke='rgba(255,214,128,.20)'
-        strokeWidth='1.4'
+        d='M300 196c42 0 76 34 76 76v56c0 42-34 76-76 76s-76-34-76-76v-56c0-42 34-76 76-76Z'
+        fill='rgba(255,214,128,.06)'
+        stroke='rgba(255,214,128,.22)'
+        strokeWidth='2'
       />
       <path
-        d='M230 360h140'
-        fill='none'
-        stroke='rgba(255,214,128,.14)'
-        strokeWidth='1'
+        d='M260 284h80M260 316h80'
+        stroke='rgba(255,214,128,.34)'
+        strokeWidth='3'
+        strokeLinecap='round'
       />
     </svg>
   );
 }
 
-function AxiomStateLight({
-  state,
-}: {
-  state: 'GREEN' | 'YELLOW' | 'RED';
-}) {
-  const map = {
-    GREEN: { dot: '🟢', label: 'AXIOM: CLEAR' },
-    YELLOW: { dot: '🟡', label: 'AXIOM: REVIEW' },
-    RED: { dot: '🔴', label: 'AXIOM: ELEVATED' },
-  } as const;
-
-  const x = map[state];
-
+function Badge({ children }: { children: string }) {
   return (
-    <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1.5'>
-      <span className='text-[12px]' aria-hidden>
-        {x.dot}
-      </span>
-      <span className='text-[10px] tracking-wideplus text-white/70'>
-        {x.label}
-      </span>
+    <div className='rounded-full border border-[rgba(255,214,128,.22)] bg-[rgba(255,214,128,.06)] px-3 py-1 text-[10px] tracking-wideplus text-[rgba(255,214,128,.9)]'>
+      {children.toUpperCase()}
     </div>
   );
 }
 
-function LedgerTick() {
-  // Cosmetic tick — purely visual, does not touch time. It “feels alive”.
-  return (
-    <div className='mt-7 flex items-center gap-3'>
-      <div className='relative h-[10px] w-[10px]'>
-        <span className='absolute inset-0 rounded-full bg-[rgba(255,214,128,.55)] opacity-70 animate-[pulse_1.6s_ease-in-out_infinite]' />
-        <span className='absolute inset-[2px] rounded-full bg-[rgba(255,214,128,.85)]' />
-      </div>
-      <div className='text-[10px] tracking-wideplus text-white/55'>
-        LEDGER SIGNAL · STRUCTURE IS ACTIVE
-      </div>
-    </div>
-  );
-}
+function AxiomLight({ state }: { state: 'GREEN' | 'YELLOW' | 'RED' }) {
+  const label =
+    state === 'GREEN' ? 'STABLE' : state === 'YELLOW' ? 'REVIEW' : 'ATTENTION';
+  const dot =
+    state === 'GREEN' ? '🟢' : state === 'YELLOW' ? '🟡' : '🔴';
 
-function Pill({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
   return (
-    <div className='rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-4'>
-      <div className='text-[10px] tracking-widemax text-white/55'>
-        {label.toUpperCase()}
+    <div className='flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3'>
+      <div className='text-[10px] tracking-wideplus text-white/60'>AXIOM STATE</div>
+      <div className='h-4 w-px bg-white/10' />
+      <div className='flex items-center gap-2 text-[11px] tracking-widemax text-white/70'>
+        <span className='text-base leading-none'>{dot}</span>
+        {label}
       </div>
-      <div className='mt-1 text-sm text-white/70'>{value}</div>
     </div>
   );
 }
@@ -139,207 +96,175 @@ function Pill({
 function Card({
   title,
   tag,
-  desc,
+  body,
 }: {
   title: string;
   tag: string;
-  desc: string;
+  body: string;
 }) {
   return (
-    <div className='rounded-3xl border border-white/10 bg-white/[0.02] p-7'>
-      <div className='flex items-center justify-between gap-4'>
-        <div className='text-sm tracking-wideplus text-white/85'>
-          {title}
-        </div>
-
-        {/* Gold emblem-chip */}
-        <div className='inline-flex items-center gap-2 rounded-full border border-[rgba(255,214,128,.22)] bg-[rgba(255,214,128,.06)] px-3 py-1'>
-          <span
-            aria-hidden
-            className='h-2 w-2 rounded-full bg-[rgba(255,214,128,.85)]'
-          />
-          <span className='text-[9px] tracking-widemax text-[rgba(255,214,128,.92)]'>
-            {tag.toUpperCase()}
-          </span>
-        </div>
+    <div className='relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-8'>
+      <div className='pointer-events-none absolute inset-0 opacity-[0.55]'>
+        <div className='absolute -top-24 left-10 h-56 w-56 rounded-full bg-[rgba(255,214,128,.08)] blur-3xl' />
+        <div className='absolute -bottom-24 right-8 h-56 w-56 rounded-full bg-white/[0.06)] blur-3xl' />
       </div>
 
-      <p className='mt-4 text-sm text-white/60 leading-relaxed'>{desc}</p>
+      <div className='relative'>
+        <div className='flex items-start justify-between gap-6'>
+          <div className='text-[11px] tracking-widemax text-white/70'>{title.toUpperCase()}</div>
+          <Badge>{tag}</Badge>
+        </div>
+        <div className='mt-4 text-sm text-white/60 leading-relaxed'>{body}</div>
+      </div>
     </div>
   );
 }
 
-function Step({
-  n,
-  title,
-  desc,
+function LaneRow({
+  k,
+  v,
 }: {
-  n: string;
-  title: string;
-  desc: string;
+  k: string;
+  v: string;
 }) {
   return (
-    <div className='flex gap-4 rounded-3xl border border-white/10 bg-white/[0.02] p-7'>
-      <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-[rgba(255,214,128,.25)] bg-[rgba(255,214,128,.06)] text-[11px] tracking-widemax text-[rgba(255,214,128,.95)]'>
-        {n}
-      </div>
-      <div>
-        <div className='text-[11px] tracking-widemax text-white/75'>
-          {title.toUpperCase()}
-        </div>
-        <div className='mt-2 text-sm text-white/60 leading-relaxed'>
-          {desc}
-        </div>
-      </div>
+    <div className='flex items-start justify-between gap-6 border-t border-white/10 py-4 first:border-t-0 first:pt-0 last:pb-0'>
+      <div className='text-[11px] tracking-widemax text-white/70'>{k.toUpperCase()}</div>
+      <div className='text-sm text-white/60 text-right leading-relaxed'>{v}</div>
     </div>
   );
 }
 
 export default function DigitalParliament() {
-  // Demo-safe AXIOM state: keep it GREEN on the public shell.
-  // Later, if you want, we can read this from a public endpoint — but not today.
+  // Demo mode: you can later drive this from real signals if you want.
   const axiomState: 'GREEN' | 'YELLOW' | 'RED' = 'GREEN';
 
   return (
     <InstitutionalFrame active='/digital-parliament'>
       {/* HERO */}
-      <section className='relative'>
+      <section className='relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-12'>
+        {/* emblem */}
         <Emblem />
 
-        <div className='flex flex-wrap items-center justify-between gap-3'>
-          <div className='inline-flex items-center gap-2 rounded-full border border-[rgba(255,214,128,.20)] bg-[rgba(255,214,128,.06)] px-4 py-1.5 text-[10px] tracking-widemax text-[rgba(255,214,128,.92)]'>
-            DIGITAL PARLIAMENT LEDGER · GOVERNANCE INFRASTRUCTURE
+        {/* top glow */}
+        <div className='pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(900px_200px_at_50%_0%,rgba(255,214,128,0.10),transparent_62%)]' />
+
+        <div className='relative'>
+          <div className='flex flex-wrap items-start justify-between gap-6'>
+            <div>
+              <div className='text-[11px] tracking-widemax text-white/65'>
+                OASIS DIGITAL PARLIAMENT
+              </div>
+
+              <h1 className='mt-4 text-3xl tracking-wideplus'>
+                Governance infrastructure — <span className='text-[rgba(255,214,128,.95)]'>you can verify</span>.
+              </h1>
+
+              <p className='mt-6 max-w-3xl text-white/65 leading-relaxed'>
+                A disciplined lifecycle for institutional decisions: drafting, authority approval,
+                signature execution, deterministic archiving, and public verification.
+                Calm by design. Auditable by default.
+              </p>
+            </div>
+
+            <div className='flex flex-col gap-3'>
+              {/* subtle “ledger tick” pulse */}
+              <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3'>
+                <div className='pointer-events-none absolute inset-0'>
+                  <div className='absolute left-[-20%] top-0 h-full w-[40%] bg-[linear-gradient(90deg,transparent,rgba(255,214,128,.18),transparent)] animate-[ledgerTick_2.6s_ease-in-out_infinite]' />
+                </div>
+                <div className='relative flex items-center justify-between gap-6'>
+                  <div>
+                    <div className='text-[10px] tracking-wideplus text-white/55'>LEDGER TICK</div>
+                    <div className='mt-1 text-[11px] tracking-widemax text-white/70'>
+                      SYSTEM HEARTBEAT • DISCIPLINE • CLOCKED
+                    </div>
+                  </div>
+                  <div className='h-8 w-8 rounded-full border border-[rgba(255,214,128,.22)] bg-[rgba(255,214,128,.06)]' />
+                </div>
+              </div>
+
+              <AxiomLight state={axiomState} />
+            </div>
           </div>
 
-          <AxiomStateLight state={axiomState} />
+          <div className='mt-10 flex flex-wrap gap-3'>
+            <Badge>Draft → Council → Forge → Archive</Badge>
+            <Badge>Deterministic Hashing</Badge>
+            <Badge>Verified Registry</Badge>
+            <Badge>Evidence Discipline</Badge>
+          </div>
         </div>
-
-        <h1 className='mt-7 text-3xl md:text-4xl tracking-wideplus'>
-          Digital Parliament Ledger
-        </h1>
-
-        <p className='mt-6 max-w-3xl text-white/65 leading-relaxed'>
-          A governance system of record: drafting, authority review, execution by
-          signature, deterministic archiving, and public verification — aligned as a
-          coherent lifecycle. No noise. No ambiguity.
-        </p>
-
-        <LedgerTick />
-
-        <div className='mt-10 flex flex-wrap gap-3'>
-          <a
-            href='https://portal.oasisintlholdings.com'
-            target='_blank'
-            rel='noreferrer'
-            className='rounded-xl border border-[rgba(255,214,128,.35)] bg-[rgba(255,214,128,.10)] px-5 py-3 text-[11px] tracking-wideplus text-[rgba(255,214,128,.95)] hover:bg-[rgba(255,214,128,.16)]'
-          >
-            ENTER AUTHORITY GATEWAY →
-          </a>
-
-          <Link
-            href='/trust'
-            className='rounded-xl border border-white/15 bg-white/[0.02] px-5 py-3 text-[11px] tracking-wideplus text-white/70 hover:bg-white/[0.04]'
-          >
-            TRUST & VERIFICATION
-          </Link>
-
-          <Link
-            href='/authority'
-            className='rounded-xl border border-white/15 bg-white/[0.02] px-5 py-3 text-[11px] tracking-wideplus text-white/70 hover:bg-white/[0.04]'
-          >
-            PUBLIC BOUNDARY
-          </Link>
-        </div>
-      </section>
-
-      {/* PILL STRIP */}
-      <section className='mt-14 grid gap-4 md:grid-cols-3'>
-        <Pill label='Lifecycle' value='Draft → Council → Execution → Archive' />
-        <Pill label='Proof Primitive' value='Hash + Registry + Certificate Receipt' />
-        <Pill label='Position' value='Institutional · Calm · Verifiable' />
       </section>
 
       {/* CAPABILITIES */}
-      <section className='mt-14 grid gap-4 md:grid-cols-2'>
+      <section className='mt-10 grid gap-4 md:grid-cols-2'>
+        <Card
+          title='Authority & Approvals'
+          tag='Council'
+          body='Decisions move through a formal approval gate. Approval determines execution mode — signature-required or direct archive — without bypassing artifact discipline.'
+        />
+        <Card
+          title='Signature Execution'
+          tag='Forge'
+          body='Signature-required records enter a controlled envelope flow. Completion yields archive-grade artifacts and verification receipts.'
+        />
         <Card
           title='Deterministic Archive'
           tag='Archive'
-          desc='Records are rendered deterministically before hashing. Archive artifacts resolve into a verified registry and public pointer.'
+          body='Archive artifacts are rendered deterministically before hashing. Once sealed, records are treated as immutable — repairs reconcile pointers without duplication.'
         />
         <Card
-          title='Signature Discipline'
-          tag='Execution'
-          desc='Signature-required execution produces envelope-bound artifacts. Signed is not archived; archive is a separate lifecycle state.'
-        />
-        <Card
-          title='Verification by Resolution'
+          title='Public Verification'
           tag='Proof'
-          desc='Verification resolves by hash, envelope id, or ledger id — returning structured proof, not opinion.'
-        />
-        <Card
-          title='AXIOM Sidecar Intelligence'
-          tag='AXIOM'
-          desc='Intelligence runs as a read-only sidecar on evidence. Only at seal time is a snapshot embedded into the archive render.'
+          body='Public proof resolves by hash, envelope ID, or ledger ID and returns authoritative pointers — designed to feel official, printable, and retainable.'
         />
       </section>
 
-      {/* LIFECYCLE STEPS */}
-      <section className='mt-16'>
-        <div className='flex items-end justify-between gap-6'>
+      {/* LIFECYCLE */}
+      <section className='mt-12 rounded-3xl border border-white/10 bg-white/[0.02] p-10'>
+        <div className='flex flex-wrap items-start justify-between gap-6'>
           <div>
-            <div className='text-[11px] tracking-widemax text-[rgba(255,214,128,.92)]'>
-              GOVERNANCE LIFECYCLE
+            <div className='text-[11px] tracking-widemax text-white/70'>LIFECYCLE MODEL</div>
+            <div className='mt-3 text-2xl tracking-wideplus'>
+              One coherent chain — <span className='text-[rgba(255,214,128,.95)]'>no ambiguity</span>.
             </div>
-            <h2 className='mt-3 text-2xl tracking-wideplus'>
-              A sequence designed for authority.
-            </h2>
+            <p className='mt-4 max-w-3xl text-sm text-white/60 leading-relaxed'>
+              This vocabulary is acceptable publicly because it’s descriptive, not marketing.
+              It signals a real governance lifecycle: draft, approve, execute, archive, verify.
+              The system’s credibility comes from proof surfaces and custody discipline.
+            </p>
           </div>
 
-          <div className='hidden md:block rounded-2xl border border-white/10 bg-white/[0.02] px-4 py-3'>
-            <div className='text-[10px] tracking-wideplus text-white/60'>
-              PUBLIC LANE
+          <div className='rounded-2xl border border-[rgba(255,214,128,.18)] bg-[rgba(255,214,128,.05)] px-4 py-3'>
+            <div className='text-[10px] tracking-wideplus text-[rgba(255,214,128,.9)]'>
+              ENTERPRISE PRINCIPLE
             </div>
-            <div className='mt-1 text-[11px] text-white/50'>
-              This page describes posture — execution occurs in the Portal / OS.
+            <div className='mt-1 text-[11px] text-white/55'>
+              Evidence over claims • Separation of duties • Idempotent repair
             </div>
           </div>
         </div>
 
-        <div className='mt-8 grid gap-4 md:grid-cols-2'>
-          <Step
-            n='01'
-            title='Draft'
-            desc='A resolution is drafted with clean structure and context. No premature execution; drafting remains reversible.'
-          />
-          <Step
-            n='02'
-            title='Council'
-            desc='Authority reviews and approves. The Council is the gate that determines execution mode and legitimacy.'
-          />
-          <Step
-            n='03'
-            title='Execution'
-            desc='Signature-required execution proceeds through controlled signing flows. Authority remains explicit.'
-          />
-          <Step
-            n='04'
-            title='Archive'
-            desc='Sealing produces deterministic archive artifacts and registry pointers. Verification becomes public and resolvable.'
-          />
+        <div className='mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-8'>
+          <LaneRow k='Draft' v='Structured authoring and controlled promotion (no direct ledger writes).' />
+          <LaneRow k='Council' v='Authority approval gate determines execution mode.' />
+          <LaneRow k='Forge' v='Signature-only execution for required records.' />
+          <LaneRow k='Archive' v='Deterministic render + hash + registry pointers.' />
+          <LaneRow k='Verify' v='Public proof resolves as data and pointers — not opinion.' />
         </div>
       </section>
 
-      {/* NOTE PANEL */}
-      <section className='mt-16 rounded-3xl border border-white/10 bg-white/[0.02] p-8'>
-        <div className='text-[11px] tracking-widemax text-white/70'>
-          INSTITUTIONAL NOTE
-        </div>
-        <p className='mt-3 text-sm text-white/60 leading-relaxed'>
-          This site is an institutional boundary. It describes vocabulary and posture.
-          Public actions (sign / verify / certificate / onboarding) occur through the Authority
-          Gateway. Internal execution lanes operate under controlled authority.
-        </p>
-      </section>
+      {/* LOCAL CSS for the tick animation */}
+      <style jsx global>{`
+        @keyframes ledgerTick {
+          0% { transform: translateX(-120%); opacity: 0; }
+          18% { opacity: 1; }
+          50% { opacity: 1; }
+          82% { opacity: 1; }
+          100% { transform: translateX(320%); opacity: 0; }
+        }
+      `}</style>
     </InstitutionalFrame>
   );
 }
