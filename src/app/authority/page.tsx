@@ -12,6 +12,37 @@ function Panel({ title, body }: { title: string; body: string }) {
   );
 }
 
+function ActionLink({
+  href,
+  label,
+  tone = "muted",
+  external = false,
+}: {
+  href: string;
+  label: string;
+  tone?: "muted" | "gold";
+  external?: boolean;
+}) {
+  const cls =
+    tone === "gold"
+      ? "rounded-xl border border-[rgba(255,214,128,.22)] bg-[rgba(255,214,128,.06)] px-4 py-3 text-[10px] tracking-wideplus text-[rgba(255,214,128,.92)] hover:bg-[rgba(255,214,128,.10)]"
+      : "rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-[10px] tracking-wideplus text-white/70 hover:bg-white/[0.04]";
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={cls}>
+        {label}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={cls}>
+      {label}
+    </Link>
+  );
+}
+
 export default function Authority() {
   return (
     <InstitutionalFrame active="">
@@ -26,12 +57,8 @@ export default function Authority() {
         </div>
 
         <div className="hidden md:block rounded-2xl border border-[rgba(255,214,128,.18)] bg-[rgba(255,214,128,.05)] px-4 py-3">
-          <div className="text-[10px] tracking-wideplus text-[rgba(255,214,128,.9)]">
-            BOUNDARY
-          </div>
-          <div className="mt-1 text-[11px] text-white/55">
-            Explain here • Execute elsewhere
-          </div>
+          <div className="text-[10px] tracking-wideplus text-[rgba(255,214,128,.9)]">BOUNDARY</div>
+          <div className="mt-1 text-[11px] text-white/55">Explain here • Execute elsewhere</div>
         </div>
       </div>
 
@@ -54,28 +81,39 @@ export default function Authority() {
         />
       </div>
 
+      {/* ACTIONS (NO WIRING CHANGES TO EXISTING ROUTES) */}
       <div className="mt-12 flex flex-wrap gap-3">
-        <Link
-          href="/"
-          className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-[10px] tracking-wideplus text-white/70 hover:bg-white/[0.04]"
-        >
-          RETURN HOME
-        </Link>
+        <ActionLink href="/" label="RETURN HOME" tone="muted" />
 
-        {/* Swap href to https://portal.oasisintlholdings.com when ready */}
-        <Link
-          href="/trust"
-          className="rounded-xl border border-[rgba(255,214,128,.22)] bg-[rgba(255,214,128,.06)] px-4 py-3 text-[10px] tracking-wideplus text-[rgba(255,214,128,.92)] hover:bg-[rgba(255,214,128,.10)]"
-        >
-          CONTINUE TO TRUST
-        </Link>
+        {/* keep your internal trust route exactly as-is */}
+        <ActionLink href="/trust" label="CONTINUE TO TRUST" tone="gold" external={false} />
+
+        {/* optional outward doors (evidence-first; no marketing) */}
+        <ActionLink
+          href="https://portal.oasisintlholdings.com"
+          label="OPEN PUBLIC PORTAL"
+          tone="muted"
+          external
+        />
+        <ActionLink
+          href="https://onboarding.oasisintlholdings.com"
+          label="ONBOARDING"
+          tone="muted"
+          external
+        />
+        <ActionLink
+          href="https://ledger.oasisintlholdings.com"
+          label="CLIENT LEDGER"
+          tone="muted"
+          external
+        />
       </div>
 
       <div className="mt-12 rounded-3xl border border-white/10 bg-white/[0.02] p-8">
         <div className="text-[11px] tracking-widemax text-white/70">PRODUCTION NOTE</div>
         <div className="mt-3 text-sm text-white/60 leading-relaxed">
-          When the Portal domain is live, this page remains unchanged. Only the Authority Gateway
-          link resolves outward. The boundary is architectural, not cosmetic.
+          This page remains unchanged as systems evolve. Authority routes outward; execution remains
+          segregated. The boundary is architectural, not cosmetic.
         </div>
       </div>
     </InstitutionalFrame>
